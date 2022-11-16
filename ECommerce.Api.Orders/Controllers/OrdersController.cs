@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Api.Orders.Controllers
 {
+    [ApiController]
+    [Route("api/orders")]
     public class OrdersController : ControllerBase
     {
         private readonly IOrdersProvider _ordersProvider;
@@ -16,29 +18,14 @@ namespace ECommerce.Api.Orders.Controllers
             _ordersProvider = ordersProvider;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetOrdersAsync()
-        {
-            var result = await _ordersProvider.GetOrdersAsync();
-            if (result.IsSuccess)
-            {
-                return Ok(result.Orders);
-            }
-            return NotFound();
-        }
-
-        private IActionResult Ok(IEnumerable<Order> orders)
-        {
-            throw new NotImplementedException();
-        }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProductAsync(int id)
         {
-            var result = await _ordersProvider.GetOrderAsync(id);
+            var result = await _ordersProvider.GetOrdersAsync(id);
             if (result.IsSuccess)
             {
-                return Ok(result.Order);
+                return Ok(result.Orders);
             }
             return NotFound();
         }

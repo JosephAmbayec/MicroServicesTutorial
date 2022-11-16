@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using ECommerce.Api.Orders.Db;
 using ECommerce.Api.Orders.Interfaces;
-using ECommerce.Api.Orders.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -17,7 +16,7 @@ namespace ECommerce.Api.Orders.Providers
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
 
-        public OrdersProvider(OrdersDbContext dbContext, ILogger logger, IMapper mapper)
+        public OrdersProvider(OrdersDbContext dbContext, ILogger<OrdersProvider> logger, IMapper mapper)
         {
             _dbContext = dbContext;
             _logger = logger;
@@ -30,31 +29,35 @@ namespace ECommerce.Api.Orders.Providers
         {
             if (!_dbContext.Orders.Any())
             {
-                _dbContext.Orders.Add(new Db.Order() { Id = 1, CustomerId = 1, OrderDate = DateTime.Now, Total = 100, Items = null });
-                _dbContext.Orders.Add(new Db.Order() { Id = 2, CustomerId = 2, OrderDate = DateTime.Now, Total = 20.50m, Items = null });
-                _dbContext.Orders.Add(new Db.Order() { Id = 3, CustomerId = 2, OrderDate = DateTime.Now, Total = 30.50m, Items = null });
-            }
-        }
-        public async Task<(bool IsSuccess, Models.Order Order, string ErrorMessage)> GetOrderAsync(int id)
-        {
-            try
-            {
-                var order = await _dbContext.Orders.FirstOrDefaultAsync(order => order.Id == id);
-                if (order != null)
-                {
-                    var result = _mapper.Map<Db.Order, Models.Order>(order);
-                    return (true, result, null);
-                }
-                return (false, null, "Not Found");
-            }
-            catch (Exception ex)
-            {
-                _logger?.LogError(ex.ToString());
-                return (false, null, ex.Message);
+              _dbContext.Orders.Add(new Order() { Id = 1, CustomerId = 1, OrderDate = DateTime.Now, Total = 300, Items = new List<OrderItem>()
+                    {
+                        new OrderItem() { OrderId = 1, ProductId = 1, Quantity = 10, UnitPrice = 10 },
+                        new OrderItem() { OrderId = 1, ProductId = 2, Quantity = 10, UnitPrice = 10 },
+                        new OrderItem() { OrderId = 1, ProductId = 3, Quantity = 10, UnitPrice = 10 },
+                    }
+                });
+                _dbContext.Orders.Add(new Order() { Id = 2, CustomerId = 1,  OrderDate = DateTime.Now, Total = 200,
+                    Items = new List<OrderItem>()
+                    {
+                        new OrderItem() { OrderId = 2, ProductId = 1, Quantity = 10, UnitPrice = 10 },
+                        new OrderItem() { OrderId = 2, ProductId = 2, Quantity = 10, UnitPrice = 10 },
+                    }
+                });
+                _dbContext.Orders.Add(new Order() { Id = 3, CustomerId = 2, OrderDate = DateTime.Now, Total = 50,
+                    Items = new List<OrderItem>()
+                    {
+                        new OrderItem() { OrderId = 3, ProductId = 1, Quantity = 10, UnitPrice = 10 },
+                        new OrderItem() { OrderId = 3, ProductId = 2, Quantity = 10, UnitPrice = 10 },
+                        new OrderItem() { OrderId = 3, ProductId = 3, Quantity = 10, UnitPrice = 10 },
+                        new OrderItem() { OrderId = 3, ProductId = 2, Quantity = 10, UnitPrice = 10 },
+                        new OrderItem() { OrderId = 3, ProductId = 3, Quantity = 1, UnitPrice = 100 }
+                    }
+                });
+                _dbContext.SaveChanges();
             }
         }
 
-        public async Task<(bool IsSuccess, IEnumerable<Models.Order> Orders, string ErrorMessage)> GetOrdersAsync()
+        public async Task<(bool IsSuccess, IEnumerable<Models.Order> Orders, string ErrorMessage)> GetOrdersAsync(int id)
         {
             try
             {

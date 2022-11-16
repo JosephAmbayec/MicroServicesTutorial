@@ -16,6 +16,7 @@ namespace ECommerce.Api.Products.Providers
         private readonly ProductsDbContext _dbContext;
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
+
         public ProductsProvider(ProductsDbContext dbContext, ILogger<ProductsProvider> logger, IMapper mapper)
         {
             _dbContext = dbContext;

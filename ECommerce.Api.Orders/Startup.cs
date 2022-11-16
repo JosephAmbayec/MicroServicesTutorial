@@ -1,12 +1,13 @@
+using AutoMapper;
 using ECommerce.Api.Orders.Db;
 using ECommerce.Api.Orders.Interfaces;
 using ECommerce.Api.Orders.Providers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.Api.Orders
 {
@@ -22,12 +23,12 @@ namespace ECommerce.Api.Orders
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IOrdersProvider, OrdersProvider>();
-            services.AddAutoMapper(typeof(Startup));
             services.AddDbContext<OrdersDbContext>(options =>
             {
                 options.UseInMemoryDatabase("Orders");
             });
+            services.AddScoped<IOrdersProvider, OrdersProvider>();
+            services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
         }
 
@@ -38,6 +39,8 @@ namespace ECommerce.Api.Orders
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseHttpsRedirection();
 
             app.UseRouting();
 
