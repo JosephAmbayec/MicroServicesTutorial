@@ -26,7 +26,8 @@ namespace ECommerce.Api.Orders
             services.AddDbContext<OrdersDbContext>(options =>
             {
                 options.UseInMemoryDatabase("Orders");
-            });
+            },
+            ServiceLifetime.Singleton);
             services.AddScoped<IOrdersProvider, OrdersProvider>();
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
