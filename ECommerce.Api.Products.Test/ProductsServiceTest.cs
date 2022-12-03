@@ -5,6 +5,7 @@ using ECommerce.Api.Products.Providers;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace ECommerce.Api.Products.Test
@@ -12,7 +13,7 @@ namespace ECommerce.Api.Products.Test
     public class ProductsServiceTest
     {
         [Fact]
-        public async void GetProductsReturnsAllProducts()
+        public async Task GetProductsReturnsAllProducts()
         {
             var options = new DbContextOptionsBuilder<ProductsDbContext>().UseInMemoryDatabase(nameof(GetProductsReturnsAllProducts)).Options;
             var dbContext = new ProductsDbContext(options);
@@ -32,7 +33,7 @@ namespace ECommerce.Api.Products.Test
         }
 
         [Fact]
-        public async void GetProductsReturnsProductUsingValidId()
+        public async Task GetProductsReturnsProductUsingValidId()
         {
             var options = new DbContextOptionsBuilder<ProductsDbContext>().UseInMemoryDatabase(nameof(GetProductsReturnsProductUsingValidId)).Options;
             var dbContext = new ProductsDbContext(options);
@@ -53,9 +54,9 @@ namespace ECommerce.Api.Products.Test
         }
 
         [Fact]
-        public async void GetProductsReturnsProductUsingInvalidId()
+        public async Task GetProductsReturnsProductUsingInvalidId()
         {
-            var options = new DbContextOptionsBuilder<ProductsDbContext>().UseInMemoryDatabase(nameof(GetProductsReturnsProductUsingValidId)).Options;
+            var options = new DbContextOptionsBuilder<ProductsDbContext>().UseInMemoryDatabase(nameof(GetProductsReturnsProductUsingInvalidId)).Options;
             var dbContext = new ProductsDbContext(options);
             CreateProducts(dbContext);
 
