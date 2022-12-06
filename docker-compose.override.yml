@@ -29,4 +29,3 @@ services:
       - Services__Orders=http://ecommerce.api.orders
     ports:
       - "6004:80"
-
